@@ -56,6 +56,16 @@ app.get("/", (req, res) => {
     res.render("layout", variables);
 });
 
+app.get("/login", (req, res) => {
+    const content = `
+        <form action="/loginSuccess">
+            
+        </form>
+    `;
+    const variables = { title: "Login", content: content};
+    res.render("layout", variables)
+})
+
 main().catch(console.error);
 
 console.log(`Web server started and running at http://localhost:${portNumber}/`);
