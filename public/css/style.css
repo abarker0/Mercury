@@ -12,3 +12,35 @@ nav {
     text-align: center;
     background-color: lightcoral;
 }
+
+main {
+    margin: 1rem;
+}
+
+form {
+    width: 50%;
+    margin: auto;
+}
+
+.form-element {
+    margin: 1rem 0 1rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control {
+    width: 10rem;
+}
+
+.is-invalid {
+    border: 2px red solid;
+}
+
+.show-error {
+    color: red;
+    display: block;
+}
+
+.hide-error{
+    display: none;
+}

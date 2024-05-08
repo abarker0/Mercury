@@ -1,0 +1,44 @@
+<form action="/registerSuccess" method="post">
+    <fieldset>
+        <div class="form-element">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form-element">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <div class="form-element">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+            <div class="hide-error" id="errorMessage">Passwords don't match</div>
+        </div>
+        
+        <button type="submit">Submit</button>
+    </fieldset>
+</form>
+
+<script>
+    let username = document.querySelector("#username")
+    let password = document.querySelector("#password");
+    let confirmPassword = document.querySelector("#confirmPassword");
+    let errorMessage = document.querySelector("#errorMessage");
+
+    confirmPassword.addEventListener("keyup", () => {
+        if (password.value === confirmPassword.value) {
+            confirmPassword.classList = "form-control is-valid";
+            errorMessage.classList = "hide-error";
+        } else {
+            confirmPassword.classList = "form-control is-invalid";
+            errorMessage.classList = "show-error";
+        }
+    });
+
+    window.onsubmit = () => {
+        if (password.value !== confirmPassword.value) {
+            alert("Please make sure your passwords match.");
+            return false;
+        }
+        return true;
+    }
+</script>
