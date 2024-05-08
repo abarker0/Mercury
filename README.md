@@ -27,5 +27,5 @@ Planned functionality:
 * based on major, identify courses user still needs to take
 - optimize course layout including prereqs
 * find courses using api
-* store user info in db using directory id
+* store user info in db using username
 - keep track of login with cookies

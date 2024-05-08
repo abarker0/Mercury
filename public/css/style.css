@@ -44,3 +44,11 @@ form {
 .hide-error{
     display: none;
 }
+
+.success-notif {
+    color: green;
+}
+
+.error-notif {
+    color: red;
+}

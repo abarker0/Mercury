@@ -4,5 +4,9 @@
     <nav>
         <a href="/">Home</a>
         <a href="/register">Register</a>
+        <a href="/login">Login</a>
+        <% if (locals.user) { %>
+            <p> test <%= locals.user %> </p>
+        <% } %>
     </nav>
 </header>
