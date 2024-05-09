@@ -12,9 +12,9 @@
     <%- include ('../includes/header.ejs') %>
     
     <% if (locals.success) { %>
-        <div class="success-notif"> <%= success %> </div>
+        <div class="notification success-notif"> <%= success %> </div>
     <% } else if (locals.error) { %>
-        <div class="error-notif"> <%= error %> </div>
+        <div class="notification error-notif"> <%= error %> </div>
     <% } %>
 
     <main>

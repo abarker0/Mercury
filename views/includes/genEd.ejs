@@ -1,0 +1,65 @@
+<div class="completed-course-table-title">General Education Requirements</div>
+
+<div class="completed-course-table-label">Fundamental Studies (FS)</div>
+<div class="completed-course-table">
+    <div id="ge-fs-completed" class="completed-courses"></div>
+    <div id="ge-fs-incompleted" class="incompleted-courses"></div>
+</div>
+
+<div class="completed-course-table-label">Distributive Studies (DS)</div>
+<div class="completed-course-table">
+    <div id="ge-ds-completed" class="completed-courses"></div>
+    <div id="ge-ds-incompleted" class="incompleted-courses"></div>
+</div>
+
+<div class="completed-course-table-label">Big Question (SC)</div>
+<div class="completed-course-table">
+    <div id="ge-sc-completed" class="completed-courses"></div>
+    <div id="ge-sc-incompleted" class="incompleted-courses"></div>
+</div>
+
+<div class="completed-course-table-label">Diversity (DV)</div>
+<div class="completed-course-table">
+    <div id="ge-dv-completed" class="completed-courses"></div>
+    <div id="ge-dv-incompleted" class="incompleted-courses"></div>
+</div>
+
+<script>
+    function sortCompleted(reqs, completed_id, incompleted_id) {
+        const completed = document.querySelector(`#${completed_id}`);
+        const incompleted = document.querySelector(`#${incompleted_id}`);
+        let completed_html = "<ul>";
+        let incompleted_html = "<ul>";
+        for (let course of reqs) {
+            // add if to check user's previous credit
+            incompleted_html += `<li>${course}</li>`;
+        }
+        completed_html += "</ul>";
+        incompleted_html += "</ul>";
+        completed.innerHTML = completed_html;
+        incompleted.innerHTML = incompleted_html;
+    }
+
+    sortCompleted([
+        "FSAW",
+        "FSPW",
+        "FSOC",
+        "FSMA",
+        "FSAR",], "ge-fs-completed", "ge-fs-incompleted");
+    sortCompleted([
+        "DSNL",
+        "DSNS",
+        "DSHS",
+        "DSHS",
+        "DSHU",
+        "DSHU",
+        "DSSP",
+        "DSSP",], "ge-ds-completed", "ge-ds-incompleted");
+    sortCompleted([
+        "SCIS",
+        "SCIS",], "ge-sc-completed", "ge-sc-incompleted");
+    sortCompleted([
+        "DVUP",
+        "DVUP/DVCC",], "ge-dv-completed", "ge-dv-incompleted");
+    
+</script>

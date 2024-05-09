@@ -1,0 +1,48 @@
+{
+    major: "computer science",
+    requirements: {
+        common: {
+            MATH140: {course: "MATH140"},
+            MATH141: {course: "MATH141"},
+            STAT4XX: {
+                pattern: "STAT4..",
+                prereq: "MATH141",
+                no_crosslist: "CMSC",
+            },
+            MATHXXX_STATXXX: {
+                pattern: "MATH[34]..|STAT[34]..",
+                prereq: "MATH141",
+                no_crosslist: "CMSC",
+            },
+            CMSC131_CMSC133: {
+                pattern: "CMSC(131|133)",
+            },
+            CMSC132: {course: "CMSC132"},
+            CMSC216: {course: "CMSC216"},
+            CMSC250: {course: "CMSC250"},
+            CMSC330: {course: "CMSC330"},
+            CMSC351: {course: "CMSC351"},
+        },
+        general: {
+            area1: {
+                pattern: "CMSC(41.|498[BCIKX])"
+            },
+            area2: {
+                pattern: "CMSC(42[123467]|47[012]|498[EFVYZ])"
+            },
+            area3: {
+                pattern: "CMSC(43.|471)"
+            },
+            area4: {
+                pattern: "CMSC(45.|474)"
+            },
+            area5: {
+                pattern: "CMSC46.",
+                exclusive_or: true
+            },
+            ul: {
+                pattern: "CMSC(320|335|388|389|395|396|401|425|473|476|488A|498|498A|499A)"
+            }
+        }
+    }
+}

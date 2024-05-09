@@ -19,7 +19,7 @@ Contact email: abarker3@terpmail.umd.edu
 ## Functionality Summary
 
 Current functionality:
-- 
+- processes user registration, login, and session persistence using bcrypt salted encryption
 
 Planned functionality:
 - convert PLC into equivalent credits by looking up db
@@ -28,4 +28,4 @@ Planned functionality:
 - optimize course layout including prereqs
 * find courses using api
 * store user info in db using username
-- keep track of login with cookies
+- improve session security

@@ -1,12 +1,18 @@
 <header>
-    <h1>Mercury</h1>
-    <h2>A combined University of Maryland degree planner and schedule builder</h2>
-    <nav>
-        <a href="/">Home</a>
+    <div id="features" class="header-group">
+        <a href="/"><img id="logo" src="/images/mercury.png"></a>
+        
+        <a href="/degree-plan">Degree Planner</a>
+    </div>
+    
+    <div id="account" class="header-group">
         <a href="/register">Register</a>
-        <a href="/login">Login</a>
+    
         <% if (locals.user) { %>
-            <p> test <%= locals.user %> </p>
+            <a href="/logout">Logout</a>
+        <% } else { %>
+            <a href="/login">Login</a>
         <% } %>
-    </nav>
+    </div>
+    
 </header>

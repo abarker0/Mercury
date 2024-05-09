@@ -3,7 +3,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const expressLayouts = require("express-ejs-layouts")
+const expressLayouts = require("express-ejs-layouts");
 const bcrypt = require("bcrypt");
 
 require("dotenv").config({ path: path.resolve(__dirname, ".env") }) 
@@ -27,9 +27,13 @@ app.use(function(req, res, next) {
     next();
 });
 
+const degreePlan = require("./routes/degreePlan");
+app.use("/degree-plan", degreePlan);
+
 const URI = process.env.MONGO_CONNECTION_STRING;
 const MERCURY_DB = process.env.DB;
 const USER_COLLECTION = process.env.USER_COLLECTION;
+const MAJOR_REQS_COLLECTION = process.env.MAJOR_REQS_COLLECTION;
 const PORT_NUMBER = 5000;
 const SALT_ROUNDS = 10;
 
@@ -88,7 +92,7 @@ app.post("/process-login", async (req, res) => {
         if (bcrypt.compareSync(password, result.hashed)) {
             req.session.user = username;
             req.session.save();
-            res.redirect("/", { title: "Mercury" });
+            res.redirect("/");
         } else {
             res.render("login", { title: "Login", error: "Incorrect password." });
         }
@@ -115,6 +119,7 @@ app.post("/process-registration", async (req, res) => {
 });
 
 main().catch(console.error);
+
 
 console.log(`Web server started and running at http://localhost:${PORT_NUMBER}/`);
 const prompt = "Type stop to shutdown the server: ";

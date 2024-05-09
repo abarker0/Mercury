@@ -1,0 +1,70 @@
+<%- include ('../includes/genEd.ejs') %>
+
+<hr class="spacer">
+
+<div class="completed-course-table-title">Computer Science Requirements</div>
+
+<div class="completed-course-table-label">Lower Level Math</div>
+<div class="completed-course-table">
+    <div id="ge-llma-completed" class="completed-courses"></div>
+    <div id="ge-llma-incompleted" class="incompleted-courses"></div>
+</div>
+
+<div class="completed-course-table-label">Lower Level Computer Science</div>
+<div class="completed-course-table">    
+    <div id="ge-llcs-completed" class="completed-courses"></div>
+    <div id="ge-llcs-incompleted" class="incompleted-courses"></div>
+</div>
+
+<div class="completed-course-table-label">Upper Level Computer Science</div>
+<div class="completed-course-table">    
+    <div id="ge-ulcs-completed" class="completed-courses"></div>
+    <div id="ge-ulcs-incompleted" class="incompleted-courses"></div>
+</div>
+
+<div class="completed-course-table-label">Upper Level Elective</div>
+<div class="completed-course-table">
+    <div id="ge-ule-completed" class="completed-courses"></div>
+    <div id="ge-ule-incompleted" class="incompleted-courses"></div>
+</div>
+
+<script>
+    function sortCompleted(reqs, completed_id, incompleted_id) {
+        const completed = document.querySelector(`#${completed_id}`);
+        const incompleted = document.querySelector(`#${incompleted_id}`);
+        let completed_html = "<ul>";
+        let incompleted_html = "<ul>";
+        for (let course of reqs) {
+            // add if to check user's previous credit
+            incompleted_html += `<li>${course}</li>`;
+        }
+        completed_html += "</ul>";
+        incompleted_html += "</ul>";
+        completed.innerHTML = completed_html;
+        incompleted.innerHTML = incompleted_html;
+    }
+
+    // add ULC later??
+
+    sortCompleted([
+        "MATH140",
+        "MATH141",
+        "STAT4XX",
+        "MATH/STATXXX (3/4)",], "ge-llma-completed", "ge-llma-incompleted");
+    sortCompleted([
+        "CMSC131/CMSC133",
+        "CMSC132",
+        "CMSC216",
+        "CMSC250",
+        "CMSC330",
+        "CMSC351",], "ge-llcs-completed", "ge-llcs-incompleted");
+    sortCompleted([
+        "Upper Level Course 1",
+        "Upper Level Course 2",
+        "Upper Level Course 3",
+        "Upper Level Course 4",
+        "Upper Level Course 5",], "ge-ulcs-completed", "ge-ulcs-incompleted");
+    sortCompleted([
+        "Upper Level Elective 1",
+        "Upper Level Elective 2",], "ge-ule-completed", "ge-ule-incompleted");
+</script>
