@@ -1,32 +1,41 @@
-<%- include ('../includes/genEd.ejs') %>
+<div class="two-column">
+    <div id="gen-ed-status" class="inner-column">
+        <%- include ('../includes/genEd.ejs') %>
+        
+        <hr class="spacer">
 
-<hr class="spacer">
+        <div class="completed-course-table-title">Computer Science Requirements</div>
 
-<div class="completed-course-table-title">Computer Science Requirements</div>
+        <div class="completed-course-table-label">Lower Level Math</div>
+        <div class="completed-course-table">
+            <div id="ge-llma-completed" class="completed-courses"></div>
+            <div id="ge-llma-incompleted" class="incompleted-courses"></div>
+        </div>
 
-<div class="completed-course-table-label">Lower Level Math</div>
-<div class="completed-course-table">
-    <div id="ge-llma-completed" class="completed-courses"></div>
-    <div id="ge-llma-incompleted" class="incompleted-courses"></div>
+        <div class="completed-course-table-label">Lower Level Computer Science</div>
+        <div class="completed-course-table">    
+            <div id="ge-llcs-completed" class="completed-courses"></div>
+            <div id="ge-llcs-incompleted" class="incompleted-courses"></div>
+        </div>
+
+        <div class="completed-course-table-label">Upper Level Computer Science</div>
+        <div class="completed-course-table">    
+            <div id="ge-ulcs-completed" class="completed-courses"></div>
+            <div id="ge-ulcs-incompleted" class="incompleted-courses"></div>
+        </div>
+
+        <div class="completed-course-table-label">Upper Level Elective</div>
+        <div class="completed-course-table">
+            <div id="ge-ule-completed" class="completed-courses"></div>
+            <div id="ge-ule-incompleted" class="incompleted-courses"></div>
+        </div>
+    </div>
+
+    <div id="" class="inner-column">
+
+    </div>
 </div>
 
-<div class="completed-course-table-label">Lower Level Computer Science</div>
-<div class="completed-course-table">    
-    <div id="ge-llcs-completed" class="completed-courses"></div>
-    <div id="ge-llcs-incompleted" class="incompleted-courses"></div>
-</div>
-
-<div class="completed-course-table-label">Upper Level Computer Science</div>
-<div class="completed-course-table">    
-    <div id="ge-ulcs-completed" class="completed-courses"></div>
-    <div id="ge-ulcs-incompleted" class="incompleted-courses"></div>
-</div>
-
-<div class="completed-course-table-label">Upper Level Elective</div>
-<div class="completed-course-table">
-    <div id="ge-ule-completed" class="completed-courses"></div>
-    <div id="ge-ule-incompleted" class="incompleted-courses"></div>
-</div>
 
 <script>
     function sortCompleted(reqs, completed_id, incompleted_id) {
