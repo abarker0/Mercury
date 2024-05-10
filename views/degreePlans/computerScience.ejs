@@ -1,79 +1,159 @@
-<div class="two-column">
-    <div id="gen-ed-status" class="inner-column">
+<div id="requirements-container">
+    <div id="requirements-buttons">
         <%- include ('../includes/genEd.ejs') %>
         
-        <hr class="spacer">
+        <div class="spacer"></div>
 
         <div class="completed-course-table-title">Computer Science Requirements</div>
 
-        <div class="completed-course-table-label">Lower Level Math</div>
-        <div class="completed-course-table">
-            <div id="ge-llma-completed" class="completed-courses"></div>
-            <div id="ge-llma-incompleted" class="incompleted-courses"></div>
-        </div>
-
-        <div class="completed-course-table-label">Lower Level Computer Science</div>
-        <div class="completed-course-table">    
-            <div id="ge-llcs-completed" class="completed-courses"></div>
-            <div id="ge-llcs-incompleted" class="incompleted-courses"></div>
-        </div>
-
-        <div class="completed-course-table-label">Upper Level Computer Science</div>
-        <div class="completed-course-table">    
-            <div id="ge-ulcs-completed" class="completed-courses"></div>
-            <div id="ge-ulcs-incompleted" class="incompleted-courses"></div>
-        </div>
-
-        <div class="completed-course-table-label">Upper Level Elective</div>
-        <div class="completed-course-table">
-            <div id="ge-ule-completed" class="completed-courses"></div>
-            <div id="ge-ule-incompleted" class="incompleted-courses"></div>
-        </div>
+        <table id="computer-science-table" class="requirements-table"></table>
     </div>
 
-    <div id="" class="inner-column">
-
+    <div id="current-requirements-course-list">
+        <table>
+            <tr>
+                <th>Current Course List</th>
+            </tr>
+            <tbody id="course-list"></tbody>
+        </table>
     </div>
 </div>
 
+<div id="query-results"></div>
+
 
 <script>
-    function sortCompleted(reqs, completed_id, incompleted_id) {
-        const completed = document.querySelector(`#${completed_id}`);
-        const incompleted = document.querySelector(`#${incompleted_id}`);
-        let completed_html = "<ul>";
-        let incompleted_html = "<ul>";
+    function populateTableButtons(table_id, title, reqs) {
+        const table = document.querySelector(`#${table_id}`);
+        let table_html = table.innerHTML + `
+            <tr>
+                <th class="requirements-header">${title}</th>
+                <td class="requirements-buttons">
+        `;
         for (let course of reqs) {
             // add if to check user's previous credit
-            incompleted_html += `<li>${course}</li>`;
+            table_html += `<button onclick="update(this, '${course}', true)">${course}</button>`
         }
-        completed_html += "</ul>";
-        incompleted_html += "</ul>";
-        completed.innerHTML = completed_html;
-        incompleted.innerHTML = incompleted_html;
+        table.innerHTML = table_html;
     }
-
     // add ULC later??
 
-    sortCompleted([
+    populateTableButtons("computer-science-table", "Math", [
         "MATH140",
         "MATH141",
         "STAT4XX",
-        "MATH/STATXXX (3/4)",], "ge-llma-completed", "ge-llma-incompleted");
-    sortCompleted([
+        "MATH/STATXXX (3/4)"]);
+    populateTableButtons("computer-science-table", "CS", [
         "CMSC131/CMSC133",
         "CMSC132",
         "CMSC216",
         "CMSC250",
         "CMSC330",
-        "CMSC351",], "ge-llcs-completed", "ge-llcs-incompleted");
-    sortCompleted([
-        "Upper Level Course 1",
-        "Upper Level Course 2",
-        "Upper Level Course 3",
-        "Upper Level Course 4",
-        "Upper Level Course 5",], "ge-ulcs-completed", "ge-ulcs-incompleted");
-    sortCompleted([
+        "CMSC351",]);
+    populateTableButtons("computer-science-table", "Upper Level", [
+        "UL Course 1",
+        "UL Course 2",
+        "UL Course 3",
+        "UL Course 4",
+        "UL Course 5"]);
+    populateTableButtons("computer-science-table", "Electives", [
         "Upper Level Elective 1",
-        "Upper Level Elective 2",], "ge-ule-completed", "ge-ule-incompleted");
+        "Upper Level Elective 2"]);
+
+    let queryCourses = [];
+    let queryGenEds = [];
+
+    async function update(elt, req, isCourseName) {
+        if (elt.classList.contains("active")) {
+            if (isCourseName) {
+                const index = queryCourses.indexOf(req);
+                if (index > -1) {
+                    queryCourses.splice(index, 1);
+                }
+            } else {
+                const index = queryGenEds.indexOf(req);
+                if (index > -1) {
+                    queryGenEds.splice(index, 1);
+                }
+            }
+        } else {
+            if (isCourseName) {
+                queryCourses.push(req);
+            } else {
+                queryGenEds.push(req);
+            }
+        }
+        elt.classList.toggle('active');
+        
+        let umdioQuery = "https://api.umd.io/v1";
+        let umdioJson = [];
+        let i = 1;
+                
+        if (queryCourses.length > 0) {
+            const result = await fetch(`${umdioQuery}/courses/${queryCourses.join()}`);
+            umdioJson = await result.json();
+        } else if (queryGenEds.length > 0) {
+            let json;
+            do {
+                const result = await fetch(`${umdioQuery}/courses?per_page=100&gen_ed=${queryGenEds[0]}&page=${i}`);
+                json = await result.json();
+                console.log(json);
+                console.log(umdioJson);
+            
+                umdioJson.concat(json);
+                console.log(umdioJson);
+                i++;
+            } while (json.length > 0);            
+        }
+
+        console.log(umdioJson);
+
+        // make sure all json entries meet requirements
+        for (let i = umdioJson.length - 1; i >= 0; i--) {
+            // check that every gen ed in queryGenEds, the gen ed exists as a substring in at least one of the gen_ed lists
+            if (!queryGenEds.every(ge_filter => umdioJson[i].gen_ed.some(ge_list => ge_list.some(ge => ge.includes(ge_filter))))) {
+                umdioJson.splice(i, 1); // if a course doesn't meet this, remove it
+            }
+        }
+        console.log('test');
+        
+        
+        let results = document.querySelector("#query-results");
+        let resultsHTML = "";
+        umdioJson.forEach(course => {
+            resultsHTML += `
+                <button type="button" class="collapsible">${course.course_id}: ${course.name}</button>
+                <div class="content">
+                    <table>`;
+            [
+                ["Name", course.name],
+                ["Credits", course.credits],
+                ["Description", course.description],
+                ["Gen Eds", course.gen_ed],
+            ].forEach(detail => resultsHTML += `
+                        <tr>
+                            <th>${detail[0]}</th>
+                            <td>${detail[1]}</td>
+                        </tr>`);
+            resultsHTML += `
+                    </table>
+                </div>`;
+        });
+
+        results.innerHTML = resultsHTML;
+
+        let coll = document.getElementsByClassName("collapsible");
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                let content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        } 
+    }
 </script>

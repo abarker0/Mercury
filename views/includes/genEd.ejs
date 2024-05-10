@@ -1,44 +1,29 @@
 <div class="completed-course-table-title">General Education Requirements</div>
 
-<div class="completed-course-table-label">Fundamental Studies (FS)</div>
-<table id="ge-fs-completed" class="completed-course-table"></table>
-
-<div class="completed-course-table-label">Distributive Studies (DS)</div>
-<table id="ge-ds-completed" class="completed-course-table"></table>
-
-<div class="completed-course-table-label">Big Question (SC)</div>
-<table id="ge-sc-completed" class="completed-course-table"></table>
-
-<div class="completed-course-table-label">Diversity (DV)</div>
-<table id="ge-dv-completed" class="completed-course-table"></table>
+<table id="gen-ed-table" class="requirements-table"></table>
 
 <script>
-    function sortCompleted(reqs, table_id) {
+    function populateTableButtons(table_id, title, reqs) {
         const table = document.querySelector(`#${table_id}`);
-        let table_html = `
+        let table_html = table.innerHTML + `
             <tr>
-                <th>Completed</th>
-                <th>Incompleted</th>
-            </tr>
+                <th class="requirements-header">${title}</th>
+                <td class="requirements-buttons">
         `;
         for (let course of reqs) {
             // add if to check user's previous credit
-            table_html += `
-                <tr>
-                    <td></td>
-                    <td>${course}</td>
-                </tr>`;
+            table_html += `<button onclick="update(this, '${course}', false)">${course}</button>`
         }
         table.innerHTML = table_html;
     }
 
-    sortCompleted([
+    populateTableButtons("gen-ed-table", "FS", [
         "FSAW",
         "FSPW",
         "FSOC",
         "FSMA",
-        "FSAR",], "ge-fs-completed");
-    sortCompleted([
+        "FSAR",]);
+    populateTableButtons("gen-ed-table", "DS", [
         "DSNL",
         "DSNS",
         "DSHS",
@@ -46,12 +31,11 @@
         "DSHU",
         "DSHU",
         "DSSP",
-        "DSSP",], "ge-ds-completed");
-    sortCompleted([
+        "DSSP",]);
+    populateTableButtons("gen-ed-table", "SC", [
         "SCIS",
-        "SCIS",], "ge-sc-completed");
-    sortCompleted([
+        "SCIS",]);
+    populateTableButtons("gen-ed-table", "DV", [
         "DVUP",
-        "DVUP/DVCC",], "ge-dv-completed");
-    
+        "DVUP/DVCC",]);
 </script>

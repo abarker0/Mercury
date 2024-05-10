@@ -51,7 +51,6 @@ a {
 }
 
 main {
-    /* background-color: red; */
     width: 75%;
     margin: 3rem auto;
 }
@@ -101,7 +100,7 @@ form {
     padding: 1rem;
 }
 
-.two-column {
+.column-container {
     display: flex;
     flex-direction: row;
     border: 2px green solid;
@@ -112,54 +111,86 @@ form {
     border: 2px blue solid;
 }
 
-.completed-course-table-title {
-    text-align: center;
-    /* width: fit-content; */
-    margin: auto;
-    background-color: var(--color-background1);
-    padding: calc(var(--padding)/2);
+#requirements-container {
+    display: grid;
+    grid-template-areas: "requirements courses";
+    grid-template-columns: 2fr 1fr;
 }
 
-.completed-course-table-label {
-    text-decoration: underline;
-    text-align: center;
-    padding: calc(var(--padding)/2);
-    margin: 1rem auto 0 auto;
+#requirements-buttons {
+    grid-area: requirements;
 }
 
-/* table, th, td {
-    
-} */
+#current-requirements-course-list {
+    grid-area: courses;
+}
 
-.completed-course-table {
+.requirements-table {
     border: 1px solid;
     width: 80%;
     margin: auto;
-    /* border: red solid 1px; */
-    /* display: flex;
-    flex-direction: row;
-    min-width: 20rem;
-    width: fit-content;
-    margin: auto; */
-    /* align-items: center; */
-    /* justify-content: space-between; */
-    /* gap: 1rem; */
 }
 
-.completed-courses {
-    flex: 1;
-    background-color: var(--green);
-    width: auto;
-    margin: 0;
+.requirements-header {
+    width: 20%;
 }
 
-.incompleted-courses {
-    flex: 1;
-    background-color: var(--red);
-    width: auto;
-    margin: 0;
+.requirements-buttons {
+    width: 80%;
+}
+
+button:active {
+    top: 2px;
+    left: 1px;
+    box-shadow: none;
+}
+  
+
+.completed-course-table-title {
+    text-align: center;
+    width: 80%;
+    margin: auto;
+    background-color: var(--color-background1);
+    padding: calc(var(--padding)/2) 0 calc(var(--padding)/2);
 }
 
 .spacer {
-    margin: 2rem
+    margin: 1rem;
+}
+
+#current-requirements-course-list  {
+    border: 1px black solid;
+    width: 80%;
+}
+
+#current-requirements-course-list table {
+    margin: auto; 
+}
+
+#current-requirements-course-list th {
+    text-decoration: underline;
+}
+
+
+.collapsible {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.active, .collapsible:hover {
+    background-color: #ccc;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
 }
