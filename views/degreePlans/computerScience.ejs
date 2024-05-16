@@ -10,12 +10,16 @@
     </div>
 
     <div id="current-requirements-course-list">
-        <table>
-            <tr>
-                <th>Current Course List</th>
-            </tr>
-            <tbody id="course-list"></tbody>
+        <table id="course-list">
+            <thead>
+                <tr>
+                    <th>Current Course List</th>
+                    <td><button id="clear-course-list">Clear</button></td>
+                </tr>
+            </thead>
+            <tbody></tbody>
         </table>
+        
     </div>
 </div>
 
@@ -60,27 +64,113 @@
         "Upper Level Elective 1",
         "Upper Level Elective 2"]);
 
-    let queryCourses = [];
+    const special = {
+        "STAT4XX": {
+            depts: ["STAT"],
+            regex: "STAT4",
+        },
+        "MATH/STATXXX (3/4)": {
+            depts: ["MATH", "STAT"],
+            regex: "MATH3|MATH4|STAT3|STAT4",
+        },
+        "CMSC131/CMSC133": {
+            depts: ["CMSC"],
+            regex: "CMSC131|CMSC133"
+        },
+        "UL Course 1": {
+            depts: ["CMSC"],
+            regex: "CMSC4"
+        },
+        "UL Course 2": {
+            depts: ["CMSC"],
+            regex: "CMSC4"
+        },
+        "UL Course 3": {
+            depts: ["CMSC"],
+            regex: "CMSC4"
+        },
+        "UL Course 4": {
+            depts: ["CMSC"],
+            regex: "CMSC4"
+        },
+        "UL Course 5": {
+            depts: ["CMSC"],
+            regex: "CMSC4"
+        },
+        "Upper Level Elective 1": {
+            depts: ["CMSC"],
+            regex: "CMSC(320|335|388|389|395|396|401|425|473|476|488A|498|498A|499A)"
+        },
+        "Upper Level Elective 2": {
+            depts: ["CMSC"],
+            regex: "CMSC(320|335|388|389|395|396|401|425|473|476|488A|498|498A|499A)"
+        },
+    }
+
+    function removeElt(list, elt) {
+        const index = list.indexOf(elt);
+        if (index > -1) {
+            list.splice(index, 1);
+        }
+    }
+
+    async function getUMDJson(query) {
+        let umdioJson = [];
+        let json;
+        let i = 1;
+        do {
+            const result = await fetch(`${query}&page=${i}`);
+            json = await result.json();
+            umdioJson = umdioJson.concat(json);
+            i++;
+        } while (json.length > 0);
+        console.log(umdioJson);
+        return umdioJson;
+    }
+
+    let courseList = [];
+
+    let queryCourseDepts = [];
+    let queryCourseRegex = [];
     let queryGenEds = [];
+    let dvupDvcc = false;
 
     async function update(elt, req, isCourseName) {
-        if (elt.classList.contains("active")) {
+        // adjust req to be either a course object or a list of gen eds if not
+        if (Object.hasOwn(special, req)) { // if req property exists in special
+            req = special[req];
+        } else {
             if (isCourseName) {
-                const index = queryCourses.indexOf(req);
-                if (index > -1) {
-                    queryCourses.splice(index, 1);
+                req = {
+                    depts: [req.substr(0,4)],
+                    regex: req
                 }
             } else {
-                const index = queryGenEds.indexOf(req);
-                if (index > -1) {
-                    queryGenEds.splice(index, 1);
-                }
+                req = [req];
+            }
+        }
+
+        if (elt.classList.contains("active")) {
+            if (isCourseName) {
+                req.depts.forEach(dept => { // remove depts
+                    removeElt(queryCourseDepts, dept);
+                });
+                removeElt(queryCourseRegex, req.regex); // remove regex
+            } else if (req.includes("DVUP/DVCC")) {
+                dvupDvcc = false;
+            } else {
+                req.forEach(r => { // remove gen ed requirements from list
+                    removeElt(queryGenEds, r);
+                });
             }
         } else {
             if (isCourseName) {
-                queryCourses.push(req);
+                queryCourseDepts = queryCourseDepts.concat(req.depts);
+                queryCourseRegex.push(req.regex);
+            } else if (req.includes("DVUP/DVCC")) {
+                dvupDvcc = true;
             } else {
-                queryGenEds.push(req);
+                queryGenEds = queryGenEds.concat(req);
             }
         }
         elt.classList.toggle('active');
@@ -88,35 +178,38 @@
         let umdioQuery = "https://api.umd.io/v1";
         let umdioJson = [];
         let i = 1;
-                
-        if (queryCourses.length > 0) {
-            const result = await fetch(`${umdioQuery}/courses/${queryCourses.join()}`);
-            umdioJson = await result.json();
+
+        // console.log(queryCourseDepts);
+        // console.log(queryCourseRegex);
+        // console.log(queryGenEds);
+
+        // ** edge case: if department is given but also dvupDvcc, courses are not checked to meet dvup or dvcc **
+        if (queryCourseDepts.length > 0) { // at least one course dept was specified
+            for (dept of [...new Set(queryCourseDepts)]) {
+                umdioJson = await getUMDJson(`${umdioQuery}/courses?per_page=100&dept_id=${dept}`);
+            }
+        } else if (dvupDvcc) { // need to query courses for DVUP or DVCC rather than both
+            umdioJson = await getUMDJson(`${umdioQuery}/courses?per_page=100&gen_ed=DVUP`);
+            umdioJson = umdioJson.concat(await getUMDJson(`${umdioQuery}/courses?per_page=100&gen_ed=DVCC`));
         } else if (queryGenEds.length > 0) {
-            let json;
-            do {
-                const result = await fetch(`${umdioQuery}/courses?per_page=100&gen_ed=${queryGenEds[0]}&page=${i}`);
-                json = await result.json();
-                console.log(json);
-                console.log(umdioJson);
-            
-                umdioJson.concat(json);
-                console.log(umdioJson);
-                i++;
-            } while (json.length > 0);            
-        }
+            umdioJson = await getUMDJson(`${umdioQuery}/courses?per_page=100&gen_ed=${queryGenEds[0]}`);
+        } 
 
         console.log(umdioJson);
 
         // make sure all json entries meet requirements
-        for (let i = umdioJson.length - 1; i >= 0; i--) {
+        const consolidatedRegex = new RegExp(queryCourseRegex.join("|"));
+        for (let i = umdioJson.length - 1; i >= 0; i--) { 
+            console.log("in loop")
             // check that every gen ed in queryGenEds, the gen ed exists as a substring in at least one of the gen_ed lists
-            if (!queryGenEds.every(ge_filter => umdioJson[i].gen_ed.some(ge_list => ge_list.some(ge => ge.includes(ge_filter))))) {
+            if ((consolidatedRegex.length === 0 || !consolidatedRegex.test(umdioJson[i].course_id)) // 0 len check required because empty list yields /(?:)/
+                || !queryGenEds.every(ge_filter => umdioJson[i].gen_ed.some(ge_list => ge_list.some(ge => ge.includes(ge_filter))))
+            ) {
                 umdioJson.splice(i, 1); // if a course doesn't meet this, remove it
             }
         }
-        console.log('test');
-        
+
+        console.log(umdioJson);
         
         let results = document.querySelector("#query-results");
         let resultsHTML = "";
@@ -137,23 +230,63 @@
                         </tr>`);
             resultsHTML += `
                     </table>
+                    <div class="center">
+                        <button type="button" class="add-course" data-course="${course.course_id}">Add to course list</button>
+                    </div>
                 </div>`;
         });
 
         results.innerHTML = resultsHTML;
 
+        // below code from https://www.w3schools.com/howto/howto_js_collapsible.asp
         let coll = document.getElementsByClassName("collapsible");
-
-        for (i = 0; i < coll.length; i++) {
-            coll[i].addEventListener("click", function() {
-                this.classList.toggle("active");
+        for (button of coll) {
+            button.addEventListener("click", function() {
+                this.classList.toggle("collapsible-active");
                 let content = this.nextElementSibling;
-                if (content.style.display === "block") {
-                    content.style.display = "none";
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
                 } else {
-                    content.style.display = "block";
+                    content.style.maxHeight = content.scrollHeight + "px";
                 }
             });
-        } 
+        }
+
+        let add = document.getElementsByClassName("add-course");
+        let courseTable = document.querySelector("#course-list");
+        for (button of add) {
+            button.addEventListener("click", function () {
+                if (courseList.includes(this.dataset.course)) {
+                    removeElt(courseList, this.dataset.course);
+                    console.log(courseList);
+                    this.innerHTML = "Add to course list";
+                } else {
+                    courseList.push(this.dataset.course);
+                    console.log(courseList);
+                    this.innerHTML = "Remove from course list";
+                }
+                updateCourseList(courseList);
+            });
+            if (courseList.includes(button.dataset.course)) {
+                button.innerHTML = "Remove from course list";
+            }
+        }
     }
+
+    function updateCourseList(newList) {
+        let old_tbody = document.getElementById('course-list').getElementsByTagName('tbody')[0];
+        const new_tbody = document.createElement('tbody');
+        newList.forEach(course => {
+            let cell = new_tbody.insertRow(-1).insertCell();
+            cell.innerHTML = course;
+            cell.colSpan = 2;
+        });
+        old_tbody.parentNode.replaceChild(new_tbody, old_tbody)
+    }
+
+    document.querySelector("#clear-course-list").addEventListener("click", function() {
+        courseList = [];
+        updateCourseList(courseList);
+    });
+
 </script>

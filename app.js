@@ -34,7 +34,7 @@ const URI = process.env.MONGO_CONNECTION_STRING;
 const MERCURY_DB = process.env.DB;
 const USER_COLLECTION = process.env.USER_COLLECTION;
 const MAJOR_REQS_COLLECTION = process.env.MAJOR_REQS_COLLECTION;
-const PORT_NUMBER = 5000;
+const PORT_NUMBER = process.env.PORT || 5000;
 const SALT_ROUNDS = 10;
 
 process.stdin.setEncoding("utf8")
@@ -121,7 +121,7 @@ app.post("/process-registration", async (req, res) => {
 main().catch(console.error);
 
 
-console.log(`Web server started and running at http://localhost:${PORT_NUMBER}/`);
+console.log(`Web server started and running (local copy) at http://localhost:${PORT_NUMBER}/`);
 const prompt = "Type stop to shutdown the server: ";
 process.stdout.write(prompt);
 process.stdin.on("readable", function () {

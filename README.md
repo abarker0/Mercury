@@ -9,23 +9,22 @@ Users first login to store their data, then can input their major, and previous 
 
 This project was developed as a final project for CMSC335: Web Development.
 
-Submitter: Alex Barker (abarker3)
-Group Members: Alex Barker (abarker3)
-App Description: allows users to create a 4 year plan and semester schedules
-YouTube demo: TODO
-API Information: umd.io (https://beta.umd.io/), Planetterp (https://planetterp.com/api/)
-Contact email: abarker3@terpmail.umd.edu
+- Submitter: Alex Barker (abarker3)
+- Group Members: Alex Barker (abarker3)
+- App Description: allows users to create a 4 year plan and semester schedules
+- YouTube demo: TODO
+- API Information: umd.io (https://beta.umd.io/), Planetterp (https://planetterp.com/api/)
+- Contact email: abarker3@terpmail.umd.edu
 
 ## Functionality Summary
 
 Current functionality:
 - processes user registration, login, and session persistence using bcrypt salted encryption
+- requests current courses based on user query filters
 
 Planned functionality:
 - convert PLC into equivalent credits by looking up db
 * process courses already completed
 * based on major, identify courses user still needs to take
 - optimize course layout including prereqs
-* find courses using api
-* store user info in db using username
 - improve session security
