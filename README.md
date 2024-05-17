@@ -13,7 +13,7 @@ This project was developed as a final project for CMSC335: Web Development.
 - Group Members: Alex Barker (abarker3)
 - App Description: allows users to (for now) only select courses they want to add to their schedule
 - YouTube demo: https://youtu.be/33VVLIY6ceI
-- API Information: umd.io (https://beta.umd.io/), Planetterp (https://planetterp.com/api/)
+- API Information: umd.io (https://beta.umd.io/), ~~Planetterp (https://planetterp.com/api/)~~ TODO
 - Contact email: abarker3@terpmail.umd.edu
 
 ## Functionality Summary
