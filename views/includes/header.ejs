@@ -6,6 +6,10 @@
     </div>
     
     <div id="account" class="header-group">
+        <% if (locals.user) { %>
+            Logged in as <%- locals.user %>
+        <% } %>
+        
         <a href="/register">Register</a>
     
         <% if (locals.user) { %>

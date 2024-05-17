@@ -186,7 +186,7 @@
         // ** edge case: if department is given but also dvupDvcc, courses are not checked to meet dvup or dvcc **
         if (queryCourseDepts.length > 0) { // at least one course dept was specified
             for (dept of [...new Set(queryCourseDepts)]) {
-                umdioJson = await getUMDJson(`${umdioQuery}/courses?per_page=100&dept_id=${dept}`);
+                umdioJson = umdioJson.concat(await getUMDJson(`${umdioQuery}/courses?per_page=100&dept_id=${dept}`));
             }
         } else if (dvupDvcc) { // need to query courses for DVUP or DVCC rather than both
             umdioJson = await getUMDJson(`${umdioQuery}/courses?per_page=100&gen_ed=DVUP`);
