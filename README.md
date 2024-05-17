@@ -15,6 +15,9 @@ This project was developed as a final project for CMSC335: Web Development.
 - YouTube demo: https://youtu.be/33VVLIY6ceI
 - API Information: umd.io (https://beta.umd.io/), ~~Planetterp (https://planetterp.com/api/)~~ TODO
 - Contact email: abarker3@terpmail.umd.edu
+- Online deployment: https://mercury-6phd.onrender.com/
+- Start command: node app.js
+- Please note that it takes some time to fetch the API results after each button press in the degree planner, so please wait to make sure the correct results are displayed
 
 ## Functionality Summary
 
