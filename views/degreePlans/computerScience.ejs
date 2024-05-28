@@ -25,6 +25,10 @@
 
 <div id="query-results"></div>
 
+<div class="overlay" id="overlay">
+    <div class="loader"></div>
+</div>
+
 
 <script>
     function populateTableButtons(table_id, title, reqs) {
@@ -130,12 +134,15 @@
 
     let courseList = [];
 
+    let courseButtonMap = {};
+
     let queryCourseDepts = [];
     let queryCourseRegex = [];
     let queryGenEds = [];
     let dvupDvcc = false;
 
     async function update(elt, req, isCourseName) {
+        document.getElementById('overlay').classList.add('active');
         // adjust req to be either a course object or a list of gen eds if not
         if (Object.hasOwn(special, req)) { // if req property exists in special
             req = special[req];
@@ -202,7 +209,7 @@
         for (let i = umdioJson.length - 1; i >= 0; i--) { 
             console.log("in loop")
             // check that every gen ed in queryGenEds, the gen ed exists as a substring in at least one of the gen_ed lists
-            if ((consolidatedRegex.length === 0 || !consolidatedRegex.test(umdioJson[i].course_id)) // 0 len check required because empty list yields /(?:)/
+            if (!consolidatedRegex.test(umdioJson[i].course_id)
                 || !queryGenEds.every(ge_filter => umdioJson[i].gen_ed.some(ge_list => ge_list.some(ge => ge.includes(ge_filter))))
             ) {
                 umdioJson.splice(i, 1); // if a course doesn't meet this, remove it
@@ -258,10 +265,12 @@
             button.addEventListener("click", function () {
                 if (courseList.includes(this.dataset.course)) {
                     removeElt(courseList, this.dataset.course);
+                    // removeCourseMap(this.dataset.course);
                     console.log(courseList);
                     this.innerHTML = "Add to course list";
                 } else {
                     courseList.push(this.dataset.course);
+                    // addCourseMap(this.dataset.course);
                     console.log(courseList);
                     this.innerHTML = "Remove from course list";
                 }
@@ -271,6 +280,8 @@
                 button.innerHTML = "Remove from course list";
             }
         }
+
+        document.getElementById('overlay').classList.remove('active');
     }
 
     function updateCourseList(newList) {
